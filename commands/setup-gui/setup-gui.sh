@@ -115,7 +115,7 @@ esac
 #Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
 #Note 4: If you see a colon (:) then you should hit ENTER to continue.
 #:"
-dialog --backtitle "Minix 3.2.0 Setup" --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 20 80
+dialog $DIALOG_WINDOWTITLE --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 20 80
 #read ret
 
 # begin Step 1
