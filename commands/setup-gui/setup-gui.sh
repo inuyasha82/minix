@@ -13,9 +13,11 @@ MYLOCALRC=/mnt/etc/rc.local
 ROOTMB=64
 ROOTSECTS="`expr $ROOTMB '*' 1024 '*' 2`"
 USRKBFILE=/.usrkb
+DIALOG_WINDOWTITLE= --backtitle 'Minix 3.2.0 Setup'
 if [ ! -f "$USRKBFILE" ]
-then	echo "Are you really running from CD?"
-	echo "No $USRKBFILE file."
+then	#echo "Are you really running from CD?"
+	#echo "No $USRKBFILE file."
+	dialog $DIALOG_WINDOWTITLE --title "Error" --msgbox "Are you really running from CD?\n No $USRKBFILE file." 10 40
 	exit 1
 fi
 USRKB="`cat /.usrkb`"
@@ -29,22 +31,25 @@ fi
 
 if [ "$TOTALMB" -lt 1 ]
 then	 
-	echo "Are you really running from CD?"
-	echo "Something wrong with size estimate on CD."
+	#echo "Are you really running from CD?"
+	#echo "Something wrong with size estimate on CD."
+	dialog $DIALOG_WINDOWTITLE --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with size estimate on CD." 10 40
 	exit 1
 fi
 
 if [ "$ROOTFILES" -lt 1 ]
 then	 
-	echo "Are you really running from CD?"
-	echo "Something wrong with root files count on CD."
+	#echo "Are you really running from CD?"
+	#echo "Something wrong with root files count on CD."
+	dialog $DIALOG_WINDOWTITLE --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with root files count on CD." 10 40
 	exit 1
 fi
 
 if [ "$USRFILES" -lt 1 ]
 then	 
-	echo "Are you really running from CD?"
-	echo "Something wrong with usr files count on CD."
+	#echo "Are you really running from CD?"
+	#echo "Something wrong with usr files count on CD."
+	dialog $DIALOG_WINDOWTITLE --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with root files count on CD." 10 40
 	exit 1
 fi
 
@@ -101,16 +106,17 @@ case $thisroot:$fdusr in
 *)			fdroot=$thisroot	# ?
 esac
 
-echo -n "
-Welcome to the MINIX 3 setup script.  This script will guide you in setting up
-MINIX on your machine.  Please consult the manual for detailed instructions.
-
-Note 1: If the screen blanks, hit CTRL+F3 to select \"software scrolling\".
-Note 2: If things go wrong then hit CTRL+C to abort and start over.
-Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
-Note 4: If you see a colon (:) then you should hit ENTER to continue.
-:"
-read ret
+#echo -n "
+#Welcome to the MINIX 3 setup script.  This script will guide you in setting up
+#MINIX on your machine.  Please consult the manual for detailed instructions.
+#
+#Note 1: If the screen blanks, hit CTRL+F3 to select \"software scrolling\".
+#Note 2: If things go wrong then hit CTRL+C to abort and start over.
+#Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
+#Note 4: If you see a colon (:) then you should hit ENTER to continue.
+#:"
+dialog --backtitle "Minix 3.2.0 Setup" --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 20 80
+#read ret
 
 # begin Step 1
 echo ""

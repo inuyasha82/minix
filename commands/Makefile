@@ -24,7 +24,7 @@ SUBDIR=	aal add_route arp ash at autil awk \
 	profile progressbar proto pr_routes ps pwd pwdauth \
 	ramdisk rarpd rawspeed rcp rdate readall readclock \
 	reboot remsync rev rget rlogin rlogind rmdir \
-	rotate rsh rshd sed service setup shar acksize \
+	rotate rsh rshd sed service setup setup-gui shar acksize \
 	sleep slip sort spell split srccrc ackstrip \
 	stty su sum svclog swifi sync synctree sysenv \
 	syslogd tail tar tcpd tcpdp tcpstat tee telnet \
