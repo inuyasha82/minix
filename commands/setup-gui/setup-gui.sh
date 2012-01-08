@@ -13,11 +13,17 @@ MYLOCALRC=/mnt/etc/rc.local
 ROOTMB=64
 ROOTSECTS="`expr $ROOTMB '*' 1024 '*' 2`"
 USRKBFILE=/.usrkb
-DIALOG_WINDOWTITLE= --backtitle 'Minix 3.2.0 Setup'
+DIALOG_WINDOWTITLE= --backtitle "Minix 3.2.0 Setup"
+TITLE="Minix 3.2.0 Setup"
+
+DIALOG(){
+	dialog --backtitle "$TITLE" "$@"
+	return $?
+}
 if [ ! -f "$USRKBFILE" ]
 then	#echo "Are you really running from CD?"
 	#echo "No $USRKBFILE file."
-	dialog $DIALOG_WINDOWTITLE --title "Error" --msgbox "Are you really running from CD?\n No $USRKBFILE file." 10 40
+	DIALOG --title "Error" --msgbox "Are you really running from CD?\n No $USRKBFILE file." 0 0
 	exit 1
 fi
 USRKB="`cat /.usrkb`"
@@ -33,7 +39,7 @@ if [ "$TOTALMB" -lt 1 ]
 then	 
 	#echo "Are you really running from CD?"
 	#echo "Something wrong with size estimate on CD."
-	dialog $DIALOG_WINDOWTITLE --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with size estimate on CD." 10 40
+	DIALOG --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with size estimate on CD." 10 40
 	exit 1
 fi
 
@@ -41,7 +47,7 @@ if [ "$ROOTFILES" -lt 1 ]
 then	 
 	#echo "Are you really running from CD?"
 	#echo "Something wrong with root files count on CD."
-	dialog $DIALOG_WINDOWTITLE --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with root files count on CD." 10 40
+	DIALOG --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with root files count on CD." 10 40
 	exit 1
 fi
 
@@ -49,7 +55,7 @@ if [ "$USRFILES" -lt 1 ]
 then	 
 	#echo "Are you really running from CD?"
 	#echo "Something wrong with usr files count on CD."
-	dialog $DIALOG_WINDOWTITLE --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with root files count on CD." 10 40
+	DIALOG --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with root files count on CD." 10 40
 	exit 1
 fi
 
@@ -115,7 +121,7 @@ esac
 #Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
 #Note 4: If you see a colon (:) then you should hit ENTER to continue.
 #:"
-dialog $DIALOG_WINDOWTITLE --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 20 80
+DIALOG --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 20 80
 #read ret
 
 # begin Step 1
