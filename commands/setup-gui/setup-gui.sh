@@ -15,6 +15,7 @@ ROOTSECTS="`expr $ROOTMB '*' 1024 '*' 2`"
 USRKBFILE=/.usrkb
 DIALOG_WINDOWTITLE= --backtitle "Minix 3.2.0 Setup"
 TITLE="Minix 3.2.0 Setup"
+ANSWER="/tmp/answer"
 
 DIALOG(){
 	dialog --backtitle "$TITLE" "$@"
@@ -125,20 +126,37 @@ DIALOG --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 
 #read ret
 
 # begin Step 1
-echo ""
-echo " --- Step 1: Select keyboard type --------------------------------------"
-echo ""
-
-    echo "What type of keyboard do you have?  You can choose one of:"
-    echo ""
-    ls -C /usr/lib/keymaps | sed -e 's/\.map//g' -e 's/^/    /'
-    echo ""
+i=0
+KEYMAPS=(`ls -1 /usr/lib/keymaps`)
+for line in ${KEYMAPS[@]};
+do
+        line=`echo $line|sed 's/\.map$//g'`
+        linestatus="off"
+        if [ $line = "us-std" ]
+        then
+                linestatus="on"
+        fi
+        array[ $i ]="${i} ${line} $linestatus"
+        (( i++ ))
+done
+DIALOG --radiolist "Keyboard type? [us-std]: " 0 50 ${#array[@]} ${array[@]} 2>$ANSWER
+RESULT=$?
+INPUT="$(cat $ANSWER)"
+KEYMAP=`echo ${KEYMAPS[ $INPUT ]}|sed 's/\.map$//g'`
 step1=""
+DIALOG --title "Step 1 - Keyboard setup" --msgbox "You have chosen: $KEYMAP " 10 30
+#echo ""
+#echo " --- Step 1: Select keyboard type --------------------------------------"
+#echo ""
+#echo "What type of keyboard do you have?  You can choose one of:"
+#echo ""
+#ls -C /usr/lib/keymaps | sed -e 's/\.map//g' -e 's/^/    /'
+#echo ""
 while [ "$step1" != ok ]
 do
-    echo -n "Keyboard type? [us-std] "; read keymap
-    test -n "$keymap" || keymap=us-std
-    if loadkeys "/usr/lib/keymaps/$keymap.map" 2>/dev/null 
+    #echo -n "Keyboard type? [us-std] "; read keymap
+    test -n "$KEYMAP" || KEYMAP=us-std
+    if loadkeys "/usr/lib/keymaps/$KEYMAP.map" 2>/dev/null 
     then step1=ok 
     else warn "invalid keyboard"
     fi
