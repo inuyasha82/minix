@@ -212,12 +212,12 @@ enum {
 };
 
 /* Full paths of programs used here */
-#define CHMOD		"/bin/chmod"
+#define CHMOD		"/usr/bin/chmod"
 #define CHOWN		"/usr/bin/chown"
 #define MKDIR		"/bin/mkdir"
 #define MV		"/bin/mv"
 #define NOLOGIN		"/sbin/nologin"
-#define PAX		"/bin/pax"
+#define PAX		"/usr/bin/pax"
 #define RM		"/bin/rm"
 
 #define UNSET_INACTIVE	"Null (unset)"
