@@ -144,8 +144,7 @@ do
         i=`expr $i + 1`
 done
 KEYBOARDS=$(cat /tmp/keyboards)
-DIALOG --radiolist "Keyboard type? [us-std]: " 0 0 ${i} ${KEYBOARDS}
-2>$ANSWER
+DIALOG --radiolist "Keyboard type? [us-std]: " 0 0 ${i} ${KEYBOARDS} 2>$ANSWER
 RESULT=$?
 INPUT="$(cat $ANSWER)"
 KEYMAP=`echo ${KEYMAPS[ $INPUT ]}|sed 's/\.map$//g'`
