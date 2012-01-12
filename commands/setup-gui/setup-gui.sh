@@ -127,8 +127,10 @@ DIALOG --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 
 
 # begin Step 1
 i=0
-KEYMAPS=(`ls -1 /usr/lib/keymaps`)
-for line in ${KEYMAPS[@]};
+KEYMAPS="`ls -1 /usr/lib/keymaps`"
+i=0
+rm /tmp/keyboards
+for line in $KEYMAPS;
 do
         line=`echo $line|sed 's/\.map$//g'`
         linestatus="off"
@@ -136,10 +138,14 @@ do
         then
                 linestatus="on"
         fi
-        array[ $i ]="${i} ${line} $linestatus"
-        (( i++ ))
+#        array[ $i ]="${i} ${line} $linestatus"
+#        (( i++ ))
+        echo -n "${i} ${line} ${linestatus} " >> /tmp/keyboards
+        i=`expr $i + 1`
 done
-DIALOG --radiolist "Keyboard type? [us-std]: " 0 50 ${#array[@]} ${array[@]} 2>$ANSWER
+KEYBOARDS=$(cat /tmp/keyboards)
+DIALOG --radiolist "Keyboard type? [us-std]: " 0 0 ${i} ${KEYBOARDS}
+2>$ANSWER
 RESULT=$?
 INPUT="$(cat $ANSWER)"
 KEYMAP=`echo ${KEYMAPS[ $INPUT ]}|sed 's/\.map$//g'`

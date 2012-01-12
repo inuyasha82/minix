@@ -33,6 +33,7 @@ PREINSTALLED_PACKAGES="
 	bmake
 	binutils
 	clang
+	dialog
 	"
 #	pkg_tarup
 
