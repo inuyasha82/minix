@@ -151,21 +151,12 @@ RESULT=$?
 INPUT="$(cat $ANSWER)"
 echo $INPUT
 CHOICEKEYBOARD=$(cat /tmp/keyboards | head -n `expr $INPUT + 1` | tail -n 1)
-KEYBNAME=$(echo "$CHOICEKEYBOARD) | cut -d " " -f 2
+KEYBNAME=$(echo "$CHOICEKEYBOARD" | cut -d " " -f 2)
 echo "$KEYBNAME"
-KEYMAP=`echo ${KEYMAPS[ $INPUT ]}|sed 's/\.map$//g'`
 step1=""
 DIALOG --title "Step 1 - Keyboard setup" --msgbox "You have chosen: $KEYBNAME " 10 30
-#echo ""
-#echo " --- Step 1: Select keyboard type --------------------------------------"
-#echo ""
-#echo "What type of keyboard do you have?  You can choose one of:"
-#echo ""
-#ls -C /usr/lib/keymaps | sed -e 's/\.map//g' -e 's/^/    /'
-#echo ""
 while [ "$step1" != ok ]
 do
-    #echo -n "Keyboard type? [us-std] "; read keymap
     test -n "$KEYMAP" || KEYMAP=us-std
     if loadkeys "/usr/lib/keymaps/$KEYMAP.map" 2>/dev/null 
     then step1=ok 
