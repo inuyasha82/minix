@@ -21,7 +21,7 @@ TITLE="Minix 3.2.0 Setup"
 ANSWER="/tmp/answer"
 
 DIALOG(){
-	dialog --backtitle "$TITLE" "$@"
+	/usr/pkg/bin/dialog --backtitle "$TITLE" "$@"
 	return $?
 }
 if [ ! -f "$USRKBFILE" ]
