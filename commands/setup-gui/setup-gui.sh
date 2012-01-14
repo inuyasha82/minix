@@ -150,9 +150,12 @@ DIALOG --radiolist "Keyboard type? [us-std]: " 0 0 ${i} ${KEYBOARDS} 2>$ANSWER
 RESULT=$?
 INPUT="$(cat $ANSWER)"
 echo $INPUT
-CHOICEKEYBOARD=$(cat /tmp/keyboards | head -n `expr $INPUT + 1` | tail -n 1)KEYMAP=`echo ${KEYMAPS[ $INPUT ]}|sed 's/\.map$//g'`
+CHOICEKEYBOARD=$(cat /tmp/keyboards | head -n `expr $INPUT + 1` | tail -n 1)
+KEYBNAME=$(echo "$CHOICEKEYBOARD) | cut -d " " -f 2
+echo "$KEYBNAME"
+KEYMAP=`echo ${KEYMAPS[ $INPUT ]}|sed 's/\.map$//g'`
 step1=""
-DIALOG --title "Step 1 - Keyboard setup" --msgbox "You have chosen: $KEYMAP " 10 30
+DIALOG --title "Step 1 - Keyboard setup" --msgbox "You have chosen: $KEYBNAME " 10 30
 #echo ""
 #echo " --- Step 1: Select keyboard type --------------------------------------"
 #echo ""
