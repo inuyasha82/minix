@@ -1,8 +1,11 @@
 #!/bin/sh
 #
-#	setup 4.1 - install a MINIX distribution	
-#
+#	setup-gui 4.1 - install a MINIX distribution	
+#   (forked from setup)
 # Changes:
+#    setup-gui:
+#    Jan	 2012   New install interface based on dialog/ncurses (Ivan Gualandri & Stephen Hatton)
+#    setup.sh:
 #    Aug     2005   robustness checks and beautifications  (Jorrit N. Herder)
 #    Jul     2005   extended with autopart and networking  (Ben Gras)
 #    Dec 20, 1994   created  (Kees J. Bot)
@@ -138,16 +141,16 @@ do
         then
                 linestatus="on"
         fi
-#        array[ $i ]="${i} ${line} $linestatus"
-#        (( i++ ))
-        echo -n "${i} ${line} ${linestatus} " >> /tmp/keyboards
+        echo  "${i} ${line} ${linestatus} " >> /tmp/keyboards
         i=`expr $i + 1`
 done
 KEYBOARDS=$(cat /tmp/keyboards)
+echo $KEYBOARDS
 DIALOG --radiolist "Keyboard type? [us-std]: " 0 0 ${i} ${KEYBOARDS} 2>$ANSWER
 RESULT=$?
 INPUT="$(cat $ANSWER)"
-KEYMAP=`echo ${KEYMAPS[ $INPUT ]}|sed 's/\.map$//g'`
+echo $INPUT
+CHOICEKEYBOARD=$(cat /tmp/keyboards | head -n `expr $INPUT + 1` | tail -n 1)KEYMAP=`echo ${KEYMAPS[ $INPUT ]}|sed 's/\.map$//g'`
 step1=""
 DIALOG --title "Step 1 - Keyboard setup" --msgbox "You have chosen: $KEYMAP " 10 30
 #echo ""
