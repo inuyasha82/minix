@@ -199,21 +199,19 @@ nobigsource=""
 step3=""
 while [ "$step3" != ok ]
 do
-	echo ""
-	echo " --- Step 3: Create or select a partition for MINIX 3 -------------------"
-	echo ""
-
-    echo "Now you need to create a MINIX 3 partition on your hard disk."
-    echo "You can also select one that's already there."
-    echo " "
-    echo "If you have an existing installation, reinstalling will let you"
-    echo "keep your current partitioning and subpartitioning, and overwrite"
-    echo "everything except your s1 subpartition (/home). If you want to"
-    echo "reinstall, select your existing minix partition."
-    echo " "
-    echo "Unless you are an expert, you are advised to use the automated"
-    echo "step-by-step help in setting up."
-    echo ""
+    echo "Now you need to create a MINIX 3 partition on your hard disk." > /tmp/message
+    echo "You can also select one that's already there." >> /tmp/message
+    echo " " >> /tmp/message
+    echo "If you have an existing installation, reinstalling will let you" >> /tmp/message
+    echo "keep your current partitioning and subpartitioning, and overwrite" >> /tmp/message
+    echo "everything except your s1 subpartition (/home). If you want to" >> /tmp/message
+    echo "reinstall, select your existing minix partition." >> /tmp/message
+    echo " " >> /tmp/message
+    echo "Unless you are an expert, you are advised to use the automated" >> /tmp/message
+    echo "step-by-step help in setting up." >> /tmp/message
+    echo "" >> /tmp/message
+    DIALOG --exit-label "Ok" --title "--- Step 3: Create or select a partition for MINIX 3 -------------------" \
+     --textbox /tmp/message 0 0 
     ok=""
     while [ "$ok" = "" ]
     do
