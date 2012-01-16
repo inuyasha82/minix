@@ -11,7 +11,8 @@
 #    Dec 20, 1994   created  (Kees J. Bot)
 #						
 
-debugskip=0
+# Script debugging option
+debug=0
 
 LOCALRC=/usr/etc/rc.local
 MYLOCALRC=/mnt/etc/rc.local
@@ -34,7 +35,7 @@ cancelsetup () {
 	exit 1
 }
 
-if [ $debugskip -ne 1 ]; then
+if [ $debug -ne 1 ]; then
 
 if [ ! -f "$USRKBFILE" ]
 then	DIALOG \
@@ -57,7 +58,7 @@ if [ -z "$FSTYPE" ]
 then	FSTYPE=mfs
 fi
 
-if [ $debugskip -ne 1 ]; then
+if [ $debug -ne 1 ]; then
 
 if [ "$TOTALMB" -lt 1 ]
 then	DIALOG \
@@ -293,21 +294,29 @@ step-by-step help in setting up.
 
     ok=""
 
-    DIALOG \
-	--radiolist "Select mode: " \
-		0 0 \
-		2 \
-		1 "Automatic" on \
-		2 "Expert" off \
+    DIALOG --menu "Select installation mode: " 0 50 2 \
+		automatic "Automatic Installer" \
+		expert "Expert Mode Installer" \
 	2>$ANSWER
+
 
 RESULT=$?
 INPUT=$(cat $ANSWER)
 
-echo Response: $RESULT
+
+# Temporary debugging
+
+if [ $debug -eq 1 ]; then
+
+echo Return value: $RESULT
 echo Answer: $INPUT
 
 exit
+
+fi
+
+# End of debugging
+
 		
     while [ "$ok" = "" ]
     do
