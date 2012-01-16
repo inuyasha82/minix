@@ -216,7 +216,7 @@ do
     ok=""
     DIALOG --radiolist "Select mode: " 0 0 2 \ 
 		1 "Automatic" on \
-		2 "Expert" off
+		2 "Expert" off 2>$ANSWER
 		
     while [ "$ok" = "" ]
     do
