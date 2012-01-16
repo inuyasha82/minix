@@ -19,6 +19,7 @@ USRKBFILE=/.usrkb
 DIALOG_WINDOWTITLE= --backtitle "Minix 3.2.0 Setup"
 TITLE="Minix 3.2.0 Setup"
 ANSWER="/tmp/answer"
+TMPMESSAGE="/tmp/message"
 
 DIALOG(){
 	/usr/pkg/bin/dialog --backtitle "$TITLE" "$@"
@@ -116,15 +117,15 @@ case $thisroot:$fdusr in
 *)			fdroot=$thisroot	# ?
 esac
 
-#echo -n "
-#Welcome to the MINIX 3 setup script.  This script will guide you in setting up
-#MINIX on your machine.  Please consult the manual for detailed instructions.
-#
-#Note 1: If the screen blanks, hit CTRL+F3 to select \"software scrolling\".
-#Note 2: If things go wrong then hit CTRL+C to abort and start over.
-#Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
-#Note 4: If you see a colon (:) then you should hit ENTER to continue.
-#:"
+echo -n "
+Welcome to the MINIX 3 setup script.  This script will guide you in setting up
+MINIX on your machine.  Please consult the manual for detailed instructions.
+
+Note 1: If the screen blanks, hit CTRL+F3 to select \"software scrolling\".
+Note 2: If things go wrong then hit CTRL+C to abort and start over.
+Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
+Note 4: If you see a colon (:) then you should hit ENTER to continue.
+:" > $TMPMESSAGE
 DIALOG --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 20 80
 #read ret
 
@@ -199,19 +200,19 @@ nobigsource=""
 step3=""
 while [ "$step3" != ok ]
 do
-    echo "Now you need to create a MINIX 3 partition on your hard disk." > /tmp/message
-    echo "You can also select one that's already there." >> /tmp/message
-    echo " " >> /tmp/message
-    echo "If you have an existing installation, reinstalling will let you" >> /tmp/message
-    echo "keep your current partitioning and subpartitioning, and overwrite" >> /tmp/message
-    echo "everything except your s1 subpartition (/home). If you want to" >> /tmp/message
-    echo "reinstall, select your existing minix partition." >> /tmp/message
-    echo " " >> /tmp/message
-    echo "Unless you are an expert, you are advised to use the automated" >> /tmp/message
-    echo "step-by-step help in setting up." >> /tmp/message
-    echo "" >> /tmp/message
+    echo "Now you need to create a MINIX 3 partition on your hard disk." > $TMPMESSAGE
+    echo "You can also select one that's already there." >> $TMPMESSAGE
+    echo " " >> $TMPMESSAGE
+    echo "If you have an existing installation, reinstalling will let you" >> $TMPMESSAGE
+    echo "keep your current partitioning and subpartitioning, and overwrite" >> $TMPMESSAGE
+    echo "everything except your s1 subpartition (/home). If you want to" >> $TMPMESSAGE
+    echo "reinstall, select your existing minix partition." >> $TMPMESSAGE
+    echo " " >> $TMPMESSAGE
+    echo "Unless you are an expert, you are advised to use the automated" >> $TMPMESSAGE
+    echo "step-by-step help in setting up." >> $TMPMESSAGE
+    echo "" >> $TMPMESSAGE
     DIALOG --exit-label "Ok" --title "--- Step 3: Create or select a partition for MINIX 3 -------------------" \
-     --textbox /tmp/message 0 0 
+     --textbox $TMPMESSAGE 0 0 
     ok=""
     DIALOG --radiolist "Select mode: " 0 0 2 \ 
 		1 "Automatic" on \
