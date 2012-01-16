@@ -1,7 +1,0 @@
-Welcome to the MINIX 3 setup script.  This script will guide you in setting up
-MINIX on your machine.  Please consult the manual for detailed instructions.
-
-Note 1: If the screen blanks, hit CTRL+F3 to select \"software scrolling\".
-Note 2: If things go wrong then hit CTRL+C to abort and start over.
-Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
-Note 4: If you see a colon (:) then you should hit ENTER to continue.

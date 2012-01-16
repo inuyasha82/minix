@@ -4,32 +4,50 @@
 #   (forked from setup)
 # Changes:
 #    setup-gui:
-#    Jan	 2012   New install interface based on dialog/ncurses (Ivan Gualandri & Stephen Hatton)
+#    Jan     2012   New install interface based on dialog/ncurses (Ivan Gualandri & Stephen Hatton)
 #    setup.sh:
 #    Aug     2005   robustness checks and beautifications  (Jorrit N. Herder)
 #    Jul     2005   extended with autopart and networking  (Ben Gras)
 #    Dec 20, 1994   created  (Kees J. Bot)
 #						
 
+debugskip=0
+
 LOCALRC=/usr/etc/rc.local
 MYLOCALRC=/mnt/etc/rc.local
 ROOTMB=64
 ROOTSECTS="`expr $ROOTMB '*' 1024 '*' 2`"
 USRKBFILE=/.usrkb
+
 DIALOG_WINDOWTITLE= --backtitle "Minix 3.2.0 Setup"
 TITLE="Minix 3.2.0 Setup"
-ANSWER="/tmp/answer"
+MESSAGE=/tmp/message
+ANSWER=/tmp/answer
 
-DIALOG(){
+DIALOG () {
 	/usr/pkg/bin/dialog --backtitle "$TITLE" "$@"
 	return $?
 }
-if [ ! -f "$USRKBFILE" ]
-then	#echo "Are you really running from CD?"
-	#echo "No $USRKBFILE file."
-	DIALOG --title "Error" --msgbox "Are you really running from CD?\n No $USRKBFILE file." 0 0
+
+cancelsetup () {
+	echo -e "\n\nSetup canceled.\n"
 	exit 1
+}
+
+if [ $debugskip -ne 1 ]; then
+
+if [ ! -f "$USRKBFILE" ]
+then	DIALOG \
+		--title "Error" \
+		--msgbox \
+"Are you really running from CD?\n
+No $USRKBFILE file." \
+		0 0
+	cancelsetup
 fi
+
+fi #debug
+
 USRKB="`cat /.usrkb`"
 TOTALMB="`expr 3 + $USRKB / 1024 + $ROOTMB`"
 ROOTFILES="`cat /.rootfiles`"
@@ -39,29 +57,39 @@ if [ -z "$FSTYPE" ]
 then	FSTYPE=mfs
 fi
 
+if [ $debugskip -ne 1 ]; then
+
 if [ "$TOTALMB" -lt 1 ]
-then	 
-	#echo "Are you really running from CD?"
-	#echo "Something wrong with size estimate on CD."
-	DIALOG --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with size estimate on CD." 10 40
-	exit 1
+then	DIALOG \
+		--title "Error" \
+		--msgbox \
+"Are you really running from CD?\n
+Something wrong with size estimate on CD." \
+		10 40
+	cancelsetup
 fi
 
 if [ "$ROOTFILES" -lt 1 ]
-then	 
-	#echo "Are you really running from CD?"
-	#echo "Something wrong with root files count on CD."
-	DIALOG --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with root files count on CD." 10 40
-	exit 1
+then	DIALOG \
+		--title "Error" \
+		--msgbox \
+"Are you really running from CD?\n
+Something wrong with root files count on CD." \
+		10 40
+	cancelsetup
 fi
 
 if [ "$USRFILES" -lt 1 ]
-then	 
-	#echo "Are you really running from CD?"
-	#echo "Something wrong with usr files count on CD."
-	DIALOG --title "Error" --msgbox "Are you really running from CD?\nSomething wrong with root files count on CD." 10 40
-	exit 1
+then	DIALOG \
+		--title "Error" \
+		--msgbox \
+"Are you really running from CD?\n
+Something wrong with usr files count on CD." \
+		10 40
+	cancelsetup
 fi
+
+fi #debug
 
 PATH=/bin:/sbin:/usr/bin
 export PATH
@@ -93,8 +121,11 @@ while getopts '' opt; do usage; done
 shift `expr $OPTIND - 1`
 
 if [ "$USER" != root ]
-then	echo "Please run setup as root."
-	exit 1
+then	DIALOG \
+		--title "Error" \
+		--msgbox "Please run setup as root." \
+		10 40
+	cancelsetup
 fi
 
 # Find out what we are running from.
@@ -116,53 +147,93 @@ case $thisroot:$fdusr in
 *)			fdroot=$thisroot	# ?
 esac
 
-#echo -n "
-#Welcome to the MINIX 3 setup script.  This script will guide you in setting up
-#MINIX on your machine.  Please consult the manual for detailed instructions.
-#
-#Note 1: If the screen blanks, hit CTRL+F3 to select \"software scrolling\".
-#Note 2: If things go wrong then hit CTRL+C to abort and start over.
-#Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
-#Note 4: If you see a colon (:) then you should hit ENTER to continue.
-#:"
-DIALOG --exit-label "Ok" --title "Welcome to Minix" --textbox /root/welcome.txt 20 80
-#read ret
+echo -n \
+"Welcome to the MINIX 3 setup script.  This script will guide you
+in setting up MINIX on your machine.  Please consult the manual
+for detailed instructions.
+
+Note 1: If the screen blanks, hit CTRL+F3 to select \"software scrolling\".
+Note 2: If things go wrong then hit CTRL+C to abort and start over.
+Note 3: Default answers, like [y], can simply be chosen by hitting ENTER.
+Note 4: If you see a colon (:) then you should hit ENTER to continue." \
+ > $MESSAGE
+
+DIALOG \
+	--exit-label "Ok" \
+	--title "Welcome to Minix" \
+	--textbox $MESSAGE \
+	20 80
+
 
 # begin Step 1
-i=0
-KEYMAPS="`ls -1 /usr/lib/keymaps`"
-i=0
+
+# Make a list of keyboard layouts.
+
+KEYMAPS=$(ls -1 /usr/lib/keymaps)
 rm /tmp/keyboards
+i=0
+
 for line in $KEYMAPS;
 do
-        line=`echo $line|sed 's/\.map$//g'`
+        line=$(echo $line | sed 's/\.map$//g')
+
         linestatus="off"
+
         if [ $line = "us-std" ]
         then
                 linestatus="on"
         fi
+
         echo  "${i} ${line} ${linestatus} " >> /tmp/keyboards
+
         i=`expr $i + 1`
 done
+
 KEYBOARDS=$(cat /tmp/keyboards)
-echo $KEYBOARDS
-DIALOG --radiolist "Keyboard type? [us-std]: " 0 0 ${i} ${KEYBOARDS} 2>$ANSWER
+
+
+# Display the list.
+
+DIALOG \
+ 	--radiolist \
+"Keyboard type?\n
+Spacebar to change [us-std]: " \
+	20 0 \
+	${i} \
+	${KEYBOARDS} \
+	2>$ANSWER
+
 RESULT=$?
+
+if [ $RESULT = 1 ]
+then	cancelsetup
+fi
+
 INPUT="$(cat $ANSWER)"
-echo $INPUT
+
 CHOICEKEYBOARD=$(cat /tmp/keyboards | head -n `expr $INPUT + 1` | tail -n 1)
-KEYBNAME=$(echo "$CHOICEKEYBOARD" | cut -d " " -f 2)
-echo "$KEYBNAME"
+
+KEYMAP=$(echo "$CHOICEKEYBOARD" | cut -d " " -f 2)
+
+
 step1=""
-DIALOG --title "Step 1 - Keyboard setup" --msgbox "You have chosen: $KEYBNAME " 10 30
+
+DIALOG \
+	--title "Step 1 - Keyboard setup" \
+	--msgbox "You have chosen: $KEYMAP " \
+	10 30
+
 while [ "$step1" != ok ]
 do
     test -n "$KEYMAP" || KEYMAP=us-std
-    if loadkeys "/usr/lib/keymaps/$KEYMAP.map" 2>/dev/null 
-    then step1=ok 
+
+    if loadkeys "/usr/lib/keymaps/$KEYMAP.map" 2>/dev/null
+
+    then step1=ok
     else warn "invalid keyboard"
     fi
 done
+
 # end Step 1
 
 # begin Step 2
@@ -196,26 +267,47 @@ echo ""
 nobigsource=""
 
 # begin Step 3
+
 step3=""
+
 while [ "$step3" != ok ]
 do
-    echo "Now you need to create a MINIX 3 partition on your hard disk." > /tmp/message
-    echo "You can also select one that's already there." >> /tmp/message
-    echo " " >> /tmp/message
-    echo "If you have an existing installation, reinstalling will let you" >> /tmp/message
-    echo "keep your current partitioning and subpartitioning, and overwrite" >> /tmp/message
-    echo "everything except your s1 subpartition (/home). If you want to" >> /tmp/message
-    echo "reinstall, select your existing minix partition." >> /tmp/message
-    echo " " >> /tmp/message
-    echo "Unless you are an expert, you are advised to use the automated" >> /tmp/message
-    echo "step-by-step help in setting up." >> /tmp/message
-    echo "" >> /tmp/message
-    DIALOG --exit-label "Ok" --title "--- Step 3: Create or select a partition for MINIX 3 -------------------" \
-     --textbox /tmp/message 0 0 
+    echo -n \
+"Now you need to create a MINIX 3 partition on your hard disk.
+You can also select one that's already there.
+ 
+If you have an existing installation, reinstalling will let you
+keep your current partitioning and subpartitioning, and overwrite
+everything except your s1 subpartition (/home). If you want to
+reinstall, select your existing minix partition.
+ 
+Unless you are an expert, you are advised to use the automated
+step-by-step help in setting up.
+" > $MESSAGE
+
+    DIALOG \
+	--exit-label "Ok" \
+	--title "--- Step 3: Create or select a partition for MINIX 3 -------------------" \
+	--textbox $MESSAGE \
+	0 0 
+
     ok=""
-    DIALOG --radiolist "Select mode: " 0 0 2 \ 
+
+    DIALOG \
+	--radiolist "Select mode: " \
+		0 0 \
+		2 \
 		1 "Automatic" on \
-		2 "Expert" off
+		2 "Expert" off \
+	2>$ANSWER
+
+RESULT=$?
+INPUT=$(cat $ANSWER)
+
+echo Response: $RESULT
+echo Answer: $INPUT
+
+exit
 		
     while [ "$ok" = "" ]
     do
@@ -332,7 +424,7 @@ maxhome="`expr $devsizemb - $TOTALMB - 1`"
 if [ "$devsizemb" -lt "$TOTALMB" ]
 then	echo "The selected partition ($devsizemb MB) is too small."
 	echo "You'll need $TOTALMB MB at least."
-	exit 1
+	cancelsetup
 fi
 
 if [ "$maxhome" -lt 1 ]
@@ -441,7 +533,7 @@ else
 		echo "Sorry, but your /home is too big ($homesize MB) to leave enough"
 		echo "space on the rest of the partition ($devsizemb MB) for your"
 		echo "selected installation size ($TOTALMB MB)."
-		exit 1
+		cancelsetup
 	fi
 	# Homesize unchanged (reinstall)
 	homesize=exist
@@ -608,4 +700,3 @@ may want to take care of local configuration, such as securing your system
 with a password.  Please consult the usage manual for more information. 
 
 "
-
