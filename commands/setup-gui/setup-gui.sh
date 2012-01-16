@@ -213,6 +213,10 @@ do
     DIALOG --exit-label "Ok" --title "--- Step 3: Create or select a partition for MINIX 3 -------------------" \
      --textbox /tmp/message 0 0 
     ok=""
+    DIALOG --radiolist "Select mode: " 0 0 2 \ 
+		1 "Automatic" on \
+		2 "Expert" off
+		
     while [ "$ok" = "" ]
     do
 	    echo -n "Press ENTER for automatic mode, or type 'expert': "
