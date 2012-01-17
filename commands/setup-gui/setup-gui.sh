@@ -214,9 +214,13 @@ do
     DIALOG --exit-label "Ok" --title "--- Step 3: Create or select a partition for MINIX 3 -------------------" \
      --textbox $TMPMESSAGE 0 0 
     ok=""
-    DIALOG --radiolist "Select mode: " 0 0 2 \ 
-		1 "Automatic" on \
-		2 "Expert" off 2>$ANSWER
+    DIALOG --menu "Select installation mode: " 0 50 2 \
+		automatic "Automatic Installer" \
+		expert "Expert Mode Installer" 2>$ANSWER
+#    DIALOG --radiolist "Select mode: " 0 0 2 \ 
+#		1 "Automatic" on \
+#		2 "Expert" off 2>$ANSWER
+
 		
     while [ "$ok" = "" ]
     do
