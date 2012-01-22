@@ -303,6 +303,14 @@ step-by-step help in setting up.
 RESULT=$?
 INPUT=$(cat $ANSWER)
 
+if [ "$INPUT" = automatic ]
+then
+        auto="1" 
+        ok="yes"        
+else
+        auto=""
+        ok="yes"
+fi
 
 # Temporary debugging
 
