@@ -312,6 +312,12 @@ else
         ok="yes"
 fi
 
+echo -n \
+"The next step launch an external program that helps you partitioning your drive. 
+
+When you have done you can continue with this installer" > $MESSAGE
+
+DIALOG --title "Step 3.1 - Create partition your drive" --textbox $MESSAGE 0 0
 # Temporary debugging
 
 if [ $debug -eq 1 ]; then
@@ -323,18 +329,7 @@ exit
 
 fi
 
-# End of debugging
-
-		
-    while [ "$ok" = "" ]
-    do
-	    echo -n "Press ENTER for automatic mode, or type 'expert': "
-	    read mode
-	    if [ -z "$mode" ]; then auto="1"; ok="yes"; fi 
-	    if [ "$mode" = expert ]; then auto=""; ok="yes"; fi
-	    if [ "$ok" != yes ]; then warn "try again"; fi 
-    done
-
+# End of debugging		
 	primary=
 
 	if [ -z "$auto" ]
