@@ -317,7 +317,7 @@ echo -n \
 
 When you have done you can continue with this installer" > $MESSAGE
 
-DIALOG --title "Step 3.1 - Create partition your drive" --textbox $MESSAGE 0 0
+DIALOG --title "Step 3.1 - Create partition your drive" --exit-label "Ok" --textbox $MESSAGE 0 0
 # Temporary debugging
 
 if [ $debug -eq 1 ]; then
