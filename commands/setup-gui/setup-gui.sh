@@ -297,7 +297,7 @@ step-by-step help in setting up.
     DIALOG --menu "Select installation mode: " 0 50 2 \
 		automatic "Automatic Installer" \
 		expert "Expert Mode Installer" \
-	2>$ANSWER
+	2>$ANSWER	
 
 
 RESULT=$?
@@ -455,21 +455,25 @@ do
 	echo ""
 echo " --- Step 4: Reinstall choice ------------------------------------------"
 	if mount -r /dev/$home $TMPMP >/dev/null 2>&1
-	then	umount /dev/$home >/dev/null 2>&1
-		echo ""
-		echo "You have selected an existing MINIX 3 partition."
-		echo "Type F for full installation (to overwrite entire partition)"
-		echo "Type R for a reinstallation (existing /home will not be affected)"
-		echo ""
-		echo -n "(F)ull or (R)einstall? [R] "
-		read conf
-		case "$conf" in
-		"") 	confirm="ok"; auto="r"; ;;
-		[Rr]*)	confirm="ok"; auto="r"; ;;
-		[Ff]*)	confirm="ok"; auto="" ;;
-		esac
+	then	
+		umount /dev/$home >/dev/null 2>&1
+		DIALOG --title "Step 4 - Reinstall choiche" --menu "You have selected an \
+		existing MINIX 3 partition. Please choose if you Want to perform a Full \
+		installation or a ReInstall: " 0 0 2 \
+		1 "Full Installation" \
+		2 "Reinstall" 2>$ANSWER
+		INPUT=$(cat $ANSWER)
+		if [ "$INPUT" = "1" ]
+		then 
+			confirm = "ok"
+			auto= ""
+		else
+			confirm = "ok" 
+			auto= "r"
+		fi		
 
-	else	echo ""
+	else			
+		echo ""
 		echo "No old /home found. Doing full install."
 		echo ""
 		confirm="ok";
