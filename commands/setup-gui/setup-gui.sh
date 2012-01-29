@@ -502,11 +502,11 @@ echo " --- Step 5: Select the size of /home ----------------------------------"
 		fi
 		
 		DIALOG --title "Step 5: Select the size of /home" \
-		--inputbox "MINIX will take up 300 MB, without /home. \n How big do you want your /home to be in MB (0-4000) ? [defaultvalue]" \
+		--inputbox "MINIX will take up $TOTALMB MB, without /home. \
+		How big do you want your /home to be in MB (0-$maxhome) ? [$defmb]" \
         0 0 2>$ANSWER
-		RESULT=$(cat $ANSWER)
-		echo "Return: $RESULT"
-
+		RESULT=$(cat $ANSWER)		
+		homesize=$RESULT
 		echo ""
 		echo "MINIX will take up $TOTALMB MB, without /home."
 		echo -n "How big do you want your /home to be in MB (0-$maxhome) ? [$defmb] "
