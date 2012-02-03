@@ -515,12 +515,18 @@ echo " --- Step 5: Select the size of /home ----------------------------------"
 			homesize=0
 		else
 			if [ "$homesize" -gt "$maxhome" ]
-			then	echo "That won't fit!"
+			then	
+				DIALOG --title "Too big" --msgbox "That won't fit. Retry"
 				homesize=""
 			else
 				echo ""
 				echo -n "$homesize MB Ok? [Y] "
-				read ok
+				DIALOG --title "Step 5: Select the size of /home" \
+				--yesno " Your size: $homesize MB Ok? [Yes]" 0 0
+				case $? in
+					0) 
+						ok="Y";					
+				esac
 				[ "$ok" = Y -o "$ok" = y -o "$ok" = "" ] || homesize=""
 			fi
 		fi
