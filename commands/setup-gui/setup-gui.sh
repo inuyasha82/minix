@@ -586,25 +586,33 @@ The following subpartitions are now being created on /dev/$primary:
     Root subpartition:	/dev/$root	$ROOTMB MB
     /home subpartition:	/dev/$home	$homemb
     /usr subpartition:	/dev/$usr	rest of $primary
-"
+" > $MESSAGE
+
+DIALOG \
+	--exit-label "Ok" \
+	--title "Ready to install" \
+	--textbox $MESSAGE \
+	20 80
+
 					# Secondary master bootstrap.
 installboot -m /dev/$primary /usr/mdec/masterboot >/dev/null || exit
 					# Partition the primary.
 partition /dev/$primary 1 81:${ROOTSECTS}* 81:$homesize 81:0+ > /dev/null || exit
 
-echo "Creating /dev/$root for / .."
+DIALOG --infobox "Creating /dev/$root for / .." 0 0
 mkfs.mfs /dev/$root || exit
 
 if [ "$nohome" = 0 ]
 then
 	if [ ! "$auto" = r ]
-	then	echo "Creating /dev/$home for /home .."
+	then	
+		DIALOG --infobox "Creating /dev/$home for /home .." 0 0
 		mkfs.$FSTYPE -B $blocksizebytes /dev/$home || exit
 	fi
-else	echo "Skipping /home"
+else	DIALOG --infobox "Skipping /home" 0 0
 fi
 
-echo "Creating /dev/$usr for /usr .."
+DIALOG --infobox "Creating /dev/$usr for /usr .." 0 0
 mkfs.$FSTYPE -B $blocksizebytes /dev/$usr || exit
 
 if [ "$nohome" = 0 ]
@@ -613,11 +621,17 @@ then
 else	fshome=""
 fi
 
-echo ""
-echo " --- Step 7: Wait for files to be copied -------------------------------"
-echo ""
-echo "All files will now be copied to your hard disk. This may take a while."
-echo ""
+echo "" > $MESSAGE
+echo " --- Step 7: Wait for files to be copied -------------------------------">>$MESSAGE
+echo "">>$MESSAGE
+echo "All files will now be copied to your hard disk. This may take a while.">>$MESSAGE
+echo "">>$MESSAGE
+
+DIALOG \
+	--exit-label "Ok" \
+	--title "Step 7: Wait for files to be copied" \
+	--textbox $MESSAGE \
+	20 80
 
 mount /dev/$usr /mnt >/dev/null || exit		# Mount the intended /usr.
 
