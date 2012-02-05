@@ -634,14 +634,17 @@ DIALOG \
 	20 80
 
 mount /dev/$usr /mnt >/dev/null || exit		# Mount the intended /usr.
-
+c=1
 (cd /usr || exit 1
  list="`ls | fgrep -v install`"
  for d in $list
  do	
- 	cpdir -v $d /mnt/$d
+ 	cpdir -v $d /mnt/$d 	
+ 	echo $c
+ 	c=`expr $c + 1`
  done
-) | progressbar "$USRFILES" || exit	# Copy the usr floppy.
+) | DIALOG --title "Installation Progress" --gauge "Please wait ..." 10 60 0
+#progressbar "$USRFILES" || exit	# Copy the usr floppy.
 
 umount /dev/$usr >/dev/null || exit		# Unmount the intended /usr.
 mount /dev/$root /mnt >/dev/null || exit
