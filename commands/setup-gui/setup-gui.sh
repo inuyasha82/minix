@@ -488,8 +488,6 @@ nohome="0"
 homesize=""
 if [ ! "$auto" = r ]
 then	
-echo ""
-echo " --- Step 5: Select the size of /home ----------------------------------"
 	while [ -z "$homesize" ]
 	do
 
@@ -519,8 +517,6 @@ echo " --- Step 5: Select the size of /home ----------------------------------"
 				DIALOG --title "Too big" --msgbox "That won't fit. Retry"
 				homesize=""
 			else
-				echo ""
-				echo -n "$homesize MB Ok? [Y] "
 				DIALOG --title "Step 5: Select the size of /home" \
 				--yesno " Your size: $homesize MB Ok? [Yes]" 0 0
 				case $? in
@@ -555,9 +551,9 @@ else
 	homesize="`expr $homepart / 2 / 1024`"
 	if [ "$homesize" -gt "$maxhome" ]
 	then
-		echo "Sorry, but your /home is too big ($homesize MB) to leave enough"
-		echo "space on the rest of the partition ($devsizemb MB) for your"
-		echo "selected installation size ($TOTALMB MB)."
+		DIALOG --title "Too big" --msgbox "Sorry, but your /home is too big ($homesize MB) to leave enough \n
+		space on the rest of the partition ($devsizemb MB) for your \n
+		selected installation size ($TOTALMB MB)." 0 0
 		cancelsetup
 	fi
 	# Homesize unchanged (reinstall)
@@ -571,23 +567,12 @@ blockdefault=4
 
 if [ ! "$auto" = "r" ]
 then
-	echo ""
-echo " --- Step 6: Select a block size ---------------------------------------"
-	echo ""
-	
-	echo "The default file system block size is $blockdefault kB."
-	echo ""
-	
-	while [ -z "$blocksize" ]
-	do	
-		echo -n "Block size in kilobytes? [$blockdefault] "; read blocksize
-		test -z "$blocksize" && blocksize=$blockdefault
-		if [ "$blocksize" -lt $minblocksize -o "$blocksize" -gt $maxblocksize ]
-		then	
-			warn "At least $minblocksize kB and at most $maxblocksize kB please."
-			blocksize=""
-		fi
-	done
+	DIALOG --title "Step 6: Select a block size" --nocancel\
+		--inputbox "The default file system block size is $blockdefault kB." \
+        0 0 4 2>$ANSWER
+		RESULT=$(cat $ANSWER)		
+		blocksize=$RESULT			
+		
 else
 	blocksize=$blockdefault
 fi
