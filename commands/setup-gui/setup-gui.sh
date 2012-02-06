@@ -463,13 +463,14 @@ echo " --- Step 4: Reinstall choice ------------------------------------------"
 		installation or a ReInstall: " 0 0 2 \
 		1 "Full Installation" \
 		2 "Reinstall" 2>$ANSWER
-		INPUT=$(cat $ANSWER)
+		RESULT=$?
+		INPUT=$(cat $ANSWER)		
 		if [ "$INPUT" = "1" ]
 		then 
-			confirm = "ok"
-			auto= ""
+			confirm="ok"
+			auto=""
 		else
-			confirm = "ok" 
+			confirm="ok" 
 			auto= "r"
 		fi		
 
