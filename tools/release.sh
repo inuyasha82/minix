@@ -10,8 +10,7 @@ PACKAGEDIR=/usr/pkgsrc/packages/$version_pretty/`uname -m`
 
 XBIN=usr/xbin
 SRC=src
-#REPO=git://git.minix3.org/minix
-REPO=git://github.com/inuyasha82/minix.git
+REPO=git://git.minix3.org/minix
 
 # List of packages included on installation media
 PACKAGELIST=packages.install
@@ -66,7 +65,7 @@ HDEMU=0
 COPY=0
 JAILMODE=0
 SVNREV=""
-REVTAG="setupgui"
+REVTAG=""
 PACKAGES=1
 MINIMAL=0
 MAKEMAP=0
