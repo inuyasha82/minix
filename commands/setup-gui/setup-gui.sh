@@ -383,6 +383,7 @@ Please finish the name of the primary partition you have created:
 		if [ "$auto" = "1" ]
 		then
 			# Automatic mode
+			clear
 			PF="/tmp/pf"
 			if autopart -m$TOTALMB -f$PF
 			then	if [ -s "$PF" ]
