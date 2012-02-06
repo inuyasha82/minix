@@ -453,8 +453,6 @@ confirm=""
 while [ "$confirm" = "" ]
 do
 	auto=""
-	echo ""
-echo " --- Step 4: Reinstall choice ------------------------------------------"
 	if mount -r /dev/$home $TMPMP >/dev/null 2>&1
 	then	
 		umount /dev/$home >/dev/null 2>&1
@@ -471,7 +469,7 @@ echo " --- Step 4: Reinstall choice ------------------------------------------"
 			auto=""
 		else
 			confirm="ok" 
-			auto= "r"
+			auto="r"
 		fi		
 
 	else			
@@ -643,7 +641,7 @@ c=1
  do	
  	cpdir -v $d /mnt/$d 	
  	echo $c
- 	c=`expr $c + 1`
+ 	c=`expr $c + 4`
  done
 ) | DIALOG --title "Installation Progress" --gauge "Please wait ..." 10 60 0
 #progressbar "$USRFILES" || exit	# Copy the usr floppy.
