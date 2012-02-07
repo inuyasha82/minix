@@ -20,7 +20,6 @@ ROOTMB=64
 ROOTSECTS="`expr $ROOTMB '*' 1024 '*' 2`"
 USRKBFILE=/.usrkb
 
-DIALOG_WINDOWTITLE= --backtitle "Minix 3.2.0 Setup"
 TITLE="Minix 3.2.0 Setup"
 MESSAGE=/tmp/message
 ANSWER=/tmp/answer
@@ -262,9 +261,9 @@ done
 #done
 # end Step 2
 
-echo ""
-echo " --- Step 2: Selecting full distribution -------------------------------"
-echo ""
+#echo ""
+#echo " --- Step 2: Selecting full distribution -------------------------------"
+#echo ""
 nobigsource=""
 
 # begin Step 3
@@ -622,7 +621,6 @@ else	fshome=""
 fi
 
 echo "" > $MESSAGE
-echo " --- Step 7: Wait for files to be copied -------------------------------">>$MESSAGE
 echo "">>$MESSAGE
 echo "All files will now be copied to your hard disk. This may take a while.">>$MESSAGE
 echo "">>$MESSAGE
