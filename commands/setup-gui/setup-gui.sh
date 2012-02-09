@@ -637,21 +637,24 @@ c=1
  list="`ls | fgrep -v install`"
  for d in $list
  do	
- 	cpdir -v $d /mnt/$d 	
+ 	cpdir $d /mnt/$d 	
  	echo $c
  	c=`expr $c + 4`
  done
-) | DIALOG --title "Installation Progress" --gauge "Please wait ..." 10 60 0
-#progressbar "$USRFILES" || exit	# Copy the usr floppy.
 
+#progressbar "$USRFILES" || exit	# Copy the usr floppy.
+echo $c
+c=`expr $c + 4`
 umount /dev/$usr >/dev/null || exit		# Unmount the intended /usr.
 mount /dev/$root /mnt >/dev/null || exit
 
 # Running from the installation CD.
-cpdir -vx / /mnt | progressbar "$ROOTFILES" || exit	
+cpdir -vx / /mnt 2>&1 1>/dev/null|| exit	
+echo $c
+c=`expr $c + 4`
 chmod o-w /mnt/usr
 cp /mnt/etc/motd.install /mnt/etc/motd
-
+) | DIALOG --title "Installation Progress" --gauge "Please wait ..." 10 60 0
 # Fix /var/log
 rm /mnt/var/log
 ln -s /usr/log /mnt/var/log
