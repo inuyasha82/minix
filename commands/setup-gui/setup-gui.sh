@@ -170,7 +170,10 @@ DIALOG \
 # Make a list of keyboard layouts.
 
 KEYMAPS=$(ls -1 /usr/lib/keymaps)
+if [ -f /tmp/keyboards ]
+then
 rm /tmp/keyboards
+fi
 i=0
 
 for line in $KEYMAPS;
@@ -644,14 +647,14 @@ c=1
 
 #progressbar "$USRFILES" || exit	# Copy the usr floppy.
 echo $c
-c=`expr $c + 4`
+c=`expr $c + 8`
 umount /dev/$usr >/dev/null || exit		# Unmount the intended /usr.
 mount /dev/$root /mnt >/dev/null || exit
 
 # Running from the installation CD.
 cpdir -vx / /mnt 2>&1 1>/dev/null|| exit	
 echo $c
-c=`expr $c + 4`
+c=`expr $c + 7`
 chmod o-w /mnt/usr
 cp /mnt/etc/motd.install /mnt/etc/motd
 ) | DIALOG --title "Installation Progress" --gauge "Please wait ..." 10 60 0
