@@ -652,7 +652,7 @@ umount /dev/$usr >/dev/null || exit		# Unmount the intended /usr.
 mount /dev/$root /mnt >/dev/null || exit
 
 # Running from the installation CD.
-cpdir -vx / /mnt 2>&1 1>/dev/null|| exit	
+cpdir -x / /mnt 2>&1 1>/dev/null|| exit	
 echo $c
 c=`expr $c + 7`
 chmod o-w /mnt/usr
@@ -703,16 +703,16 @@ then	if mount /dev/$home /home 2>/dev/null
 	fi
 fi
 
-echo "Saving random data.."
-dd if=/dev/random of=/mnt/adm/random.dat bs=1024 count=1 2>&1 1>/dev/null
+DIALOG --infobox  "Saving random data.." 0 0
+dd if=/dev/random of=/mnt/adm/random.dat bs=1024 count=1 2>/dev/null
 
 umount /dev/$usr >/dev/null || exit
 
 # Networking.
+clear
 echo ""
 echo " --- Step 8: Select your Ethernet chip ---------------------------------"
 echo ""
-
 mount /dev/$root /mnt >/dev/null || exit
 mount /dev/$usr /mnt/usr >/dev/null || exit
 
@@ -732,4 +732,10 @@ you can run the test suites as indicated in the setup manual.  You also
 may want to take care of local configuration, such as securing your system
 with a password.  Please consult the usage manual for more information. 
 
-"
+" > $MESSAGE
+
+DIALOG \
+	--exit-label "Ok" \
+	--title "Finish" \
+	--textbox $MESSAGE \
+	20 80
