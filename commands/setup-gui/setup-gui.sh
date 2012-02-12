@@ -668,7 +668,7 @@ echo >/mnt/etc/fstab "/dev/$root	/	mfs	rw	0	1
 /dev/$usr	/usr	$FSTYPE	rw	0	2
 $fshome"
 
-					# National keyboard map.
+# National keyboard map.
 test -n "$keymap" && cp -p "/usr/lib/keymaps/$keymap.map" /mnt/etc/keymap
 
 umount /dev/$root >/dev/null || exit 	# Unmount the new root.
@@ -692,8 +692,9 @@ then	if mount /dev/$home /home 2>/dev/null
 	then	for u in bin ast
 		do	h=`eval echo "~$u"`
 			if mkdir $h
-			then	echo " * Creating home directory for $u in $h"
-				cpdir /usr/ast $h
+			then
+				DIALOG --infobox "Creating home directory for $u in $h" 0 0				    
+				cpdir /usr/ast $h 2>&1 1>/dev/null
 				chown -R $u:operator $h
 			else	echo " * Couldn't create $h"
 			fi
@@ -703,7 +704,7 @@ then	if mount /dev/$home /home 2>/dev/null
 fi
 
 echo "Saving random data.."
-dd if=/dev/random of=/mnt/adm/random.dat bs=1024 count=1
+dd if=/dev/random of=/mnt/adm/random.dat bs=1024 count=1 2>&1 1>/dev/null
 
 umount /dev/$usr >/dev/null || exit
 
