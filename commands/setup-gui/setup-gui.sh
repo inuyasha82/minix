@@ -675,6 +675,7 @@ umount /dev/$root >/dev/null || exit 	# Unmount the new root.
 mount /dev/$usr /mnt >/dev/null || exit
 
 # Make bootable.
+DIALOG --infobox "Installing bootloader .." 0 0
 installboot -d /dev/$root /usr/mdec/bootblock /boot/boot >/dev/null || exit
 
 edparams /dev/$root "rootdev=$root; ramimagedev=$root; minix(1,Start MINIX 3) { image=/boot/image_big; boot; }; newminix(2,Start Custom MINIX 3) { unset image; boot }; main() { echo By default, MINIX 3 will automatically load in 3 seconds.; echo Press ESC to enter the monitor for special configuration.; trap 3000 boot; menu; }; save" || exit
