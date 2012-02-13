@@ -303,6 +303,11 @@ step-by-step help in setting up.
 
 
 RESULT=$?
+
+if [ $RESULT = 1 ] 
+	cancelsetup
+fi
+
 INPUT=$(cat $ANSWER)
 
 if [ "$INPUT" = automatic ]
@@ -464,6 +469,11 @@ do
 		1 "Full Installation" \
 		2 "Reinstall" 2>$ANSWER
 		RESULT=$?
+		
+		if [ $RESULT = 1 ] 
+			cancelsetup
+		fi
+		
 		INPUT=$(cat $ANSWER)		
 		if [ "$INPUT" = "1" ]
 		then 
@@ -709,10 +719,12 @@ dd if=/dev/random of=/mnt/adm/random.dat bs=1024 count=1 2>/dev/null
 umount /dev/$usr >/dev/null || exit
 
 # Networking.
+DIALOG \
+		--title "Step 8 - Select your Ethernet chip" \
+		--msgbox \
+		"Now the script that helps you to configure your network card will be launched.\n Press Ok to continue" \
+		0 0	
 clear
-echo ""
-echo " --- Step 8: Select your Ethernet chip ---------------------------------"
-echo ""
 mount /dev/$root /mnt >/dev/null || exit
 mount /dev/$usr /mnt/usr >/dev/null || exit
 
